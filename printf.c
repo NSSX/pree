@@ -114,6 +114,22 @@ int manage_arg(t_main *main, va_list *myva)
   return (1);
 }
 
+int my_accurate(t_main *main)
+{
+  main->i++;
+  if(main->chaine[main->i] == '.')
+    {
+      if(main->chaine[main->i + 1] >= '0' && main->chaine[main->i + 1] <= '9')
+	{
+	  main->i++;
+	  //afficher seulement les N caractere 
+	}
+      my_accurate(main);
+    }
+  else
+    main->i--;
+  return (0);
+}
 int lenght_fiel(t_main *main)
 {
   main->i++;
@@ -244,6 +260,7 @@ int ft_printf(const char *format, ...)
 	{
 	  main->elem = va_arg(myva, void *); 
 	  flag_fiel(main);
+	  my_accurate(main);
 	  lenght_fiel(main);
 	  manage_arg(main, &myva);
 	}
@@ -258,16 +275,14 @@ int ft_printf(const char *format, ...)
 int main()
 {
   //les modifier l ll etc voir dans le man 3 printf
-  unsigned int a = -3;
-  char *b = "salut";
-  unsigned int c = 934549;
-long int i = -4;
- int y = 2;
+  //La precision dit cb de carac afficher
+  //peut etre un ft_strjoin pour un bloc ?
  long long int p = 3;
+ double s = 6.4339233929;
 
   printf("VRAI PRINTF : \n");
-  printf("lol %lld\n", p);
+  printf("lol %.4s\n", "salut");
   printf("MON PRINTF : \n");
-  ft_printf("lol %lld\n",p);
+  ft_printf("lol %+04.3lld\n",p);
   return (0);
 }
