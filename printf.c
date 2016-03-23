@@ -75,7 +75,21 @@ int manage_arg(t_main *main, va_list *myva)
     }
   else if(main->chaine[main->i] == 's')
     {
-      ft_putstr((char *)main->elem);
+      if(main->accurate == -1)
+	ft_putstr((char *)main->elem);
+      else
+	{
+	  int i;
+	  char *lp;
+
+	  lp = (char *)main->elem;
+	  i = 0;
+	  while(i < main->accurate && lp[i] != '\0')
+	    {
+	      write(1, &main->elem[i],1);
+	      i++;
+	    }
+	}
     }
   else if(main->chaine[main->i] == 'u')
     {
@@ -117,14 +131,35 @@ int manage_arg(t_main *main, va_list *myva)
 int my_accurate(t_main *main)
 {
   main->i++;
+
+  int i;
+  int size;
+  int i2;
+  char *myacc;
+	 
+  i = 0;
+  i2 = 0;
   if(main->chaine[main->i] == '.')
     {
       if(main->chaine[main->i + 1] >= '0' && main->chaine[main->i + 1] <= '9')
 	{
-	  main->i++;
-	  //afficher seulement les N caractere 
+	  i = main->i + 1;  
+	  while(main->chaine[main->i + 1] >= '0' && main->chaine[main->i + 1] <= '9')
+	    {
+	      main->i++;
+	    }
+	  size = main->i - i;
+	  myacc = (char *)malloc(sizeof(char) * size + 1);
+	  while(i <= main->i)
+	    {
+	      myacc[i2] = main->chaine[i];
+	      i2++;
+	      i++;
+	    }
+	  myacc[i2] = '\0';
+	  main->accurate = ft_atoi(myacc);
 	}
-      my_accurate(main);
+      my_accurate(main); 
     }
   else
     main->i--;
@@ -243,6 +278,7 @@ int ft_printf(const char *format, ...)
   t_main *main;
 
   main = (t_main *)malloc(sizeof(t_main) * 1); 
+  main->accurate = -1;
   main->taille = 0;
   main->etat = 0;
   main->i = 0;
@@ -281,8 +317,8 @@ int main()
  double s = 6.4339233929;
 
   printf("VRAI PRINTF : \n");
-  printf("lol %.4s\n", "salut");
+  printf("lol %.5s\n", "salut12345678901234");
   printf("MON PRINTF : \n");
-  ft_printf("lol %+04.3lld\n",p);
+  ft_printf("lol %.6s\n","salut12345678901234");
   return (0);
 }
